@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import { Onboarding } from "./src/screens/Onboarding";
 import { LoadAssets } from "./src/components/LoadAssets";
+import { Welcome } from "./src/screens/Welcome";
 
 const Stack = createStackNavigator();
 const AuthenticationNavigator = () => {
@@ -13,6 +14,7 @@ const AuthenticationNavigator = () => {
       }}
     >
       <Stack.Screen name="Onboarding" component={Onboarding} />
+      <Stack.Screen name="Welcome" component={Welcome} />
     </Stack.Navigator>
   );
 };

@@ -1,5 +1,6 @@
 import type { ReactElement } from "react";
 import React, { useCallback, useEffect, useState } from "react";
+import { ThemeProvider } from "@shopify/restyle";
 import { AsyncStorage } from "react-native";
 import AppLoading from "expo-app-loading";
 import { Asset } from "expo-asset";
@@ -8,6 +9,11 @@ import type { InitialState } from "@react-navigation/native";
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Constants from "expo-constants";
+
+import theme from "../../theme/theme";
+import type { TFonts } from "../../types";
+import { WelcomeAssets } from "../../screens/Welcome";
+import { SlidesAssets } from "../../constants";
 
 const NAVIGATION_STATE_KEY = `NAVIGATION_STATE_KEY-${
   Constants.manifest ? Constants.manifest.sdkVersion : ""
@@ -40,14 +46,14 @@ interface LoadAssetsProps {
   children: ReactElement | ReactElement[];
 }
 
-const fonts = {
+const fonts: Record<TFonts, string> = {
   "SFProDisplay-Bold": require("../../assets/fonts/SF-Pro-Display-Bold.otf"),
   "SFProDisplay-Semibold": require("../../assets/fonts/SF-Pro-Display-Semibold.otf"),
   "SFProDisplay-Regular": require("../../assets/fonts/SF-Pro-Display-Regular.otf"),
   "SFProDisplay-Medium": require("../../assets/fonts/SF-Pro-Display-Medium.otf"),
 };
-
-export const LoadAssets = ({ assets, children }: LoadAssetsProps) => {
+const assets = [...WelcomeAssets, ...SlidesAssets];
+export const LoadAssets = ({ children }: LoadAssetsProps) => {
   const [isNavigationReady, setIsNavigationReady] = useState(!__DEV__);
   const [initialState, setInitialState] = useState<InitialState | undefined>();
   const ready = useLoadAssets(assets || [], fonts || {});
@@ -79,9 +85,11 @@ export const LoadAssets = ({ assets, children }: LoadAssetsProps) => {
     return <AppLoading />;
   }
   return (
-    <NavigationContainer {...{ onStateChange, initialState }}>
-      <StatusBar style="light" />
-      {children}
-    </NavigationContainer>
+    <ThemeProvider theme={theme}>
+      <NavigationContainer {...{ onStateChange, initialState }}>
+        <StatusBar style="light" />
+        {children}
+      </NavigationContainer>
+    </ThemeProvider>
   );
 };

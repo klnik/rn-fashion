@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, Dimensions, StyleSheet, Image } from "react-native";
+import { View, Dimensions, StyleSheet, Image } from "react-native";
 
+import { Text } from "../../components/Text";
 import { BORDER_RADIUS } from "../../constants";
 import type { ISlider } from "../../types";
 
@@ -10,19 +11,13 @@ const style = StyleSheet.create({
   container: {
     width: width,
   },
-  title: {
-    fontSize: 80,
-    fontFamily: "SFProDisplay-Bold",
-    color: "white",
-    textAlign: "center",
-  },
   titleContainer: {
-    backgroundColor: "red",
     justifyContent: "center",
   },
   underlay: {
     ...StyleSheet.absoluteFillObject,
-    justifyContent: "flex-start",
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
   picture: {
     ...StyleSheet.absoluteFillObject,
@@ -54,13 +49,10 @@ export const Slide = ({ title, right, picture }: ISlider) => {
         ...style.container,
       }}
     >
-      <View style={style.underlay}>
-        <Image source={picture.src} style={style.picture} />
-      </View>
       <View
         style={(style.titleContainer, { transform: transformStyle(right) })}
       >
-        <Text style={style.title}>{title}</Text>
+        <Text variant="hero">{title}</Text>
       </View>
     </View>
   );

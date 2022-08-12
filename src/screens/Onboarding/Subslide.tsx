@@ -1,7 +1,8 @@
 import React from "react";
-import { View, StyleSheet, Text, Dimensions } from "react-native";
+import { View, StyleSheet, Dimensions } from "react-native";
 import type Animated from "react-native-reanimated";
 
+import { Text } from "../../components/Text";
 import { Button } from "../../components/Button/Button";
 const { width, height } = Dimensions.get("window");
 interface ISubslider {
@@ -18,22 +19,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 44,
     width: width,
-  },
-  subtitle: {
-    fontFamily: "SFProDisplay-Semibold",
-    fontSize: 24,
-    color: "#0C0D34",
-    textAlign: "center",
-    lineHeight: 30,
-    marginBottom: 12,
-  },
-  description: {
-    fontFamily: "SFProDisplay-Regular",
-    fontSize: 16,
-    color: "#0C0D34",
-    lineHeight: 24,
-    textAlign: "center",
-    marginBottom: 40,
   },
 });
 
@@ -61,8 +46,12 @@ export const Subslide = ({
         ...styles.container,
       }}
     >
-      <Text style={styles.subtitle}>{subtitle}</Text>
-      <Text style={styles.description}>{description}</Text>
+      <Text variant={"title24"} textAlign="center" marginTop={"xl"}>
+        {subtitle}
+      </Text>
+      <Text variant="description" mb="l" textAlign={"center"}>
+        {description}
+      </Text>
       <Button
         {...{ onPress }}
         label={last ? "Let's get started" : "Next"}

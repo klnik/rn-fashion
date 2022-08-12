@@ -1,17 +1,23 @@
+import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useRef } from "react";
-import { Text, View, StyleSheet, Dimensions } from "react-native";
+import { Text, View, StyleSheet, Dimensions, Image } from "react-native";
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
   useAnimatedStyle,
   useDerivedValue,
+  interpolate,
+  Extrapolate,
 } from "react-native-reanimated";
-import { interpolateColor } from "react-native-redash";
+import { interpolateColor, opacity } from "react-native-redash";
 
-import { BORDER_RADIUS } from "../../constants";
+import type { AuthNavigationProps } from "../../components/Navigation";
+import { BORDER_RADIUS, slides } from "../../constants";
+import { Routes } from "../../types";
 
 import { Dot } from "./Dot";
 import { Slide } from "./Slide";
+import { SlideImage } from "./SlideImage";
 import { Subslide } from "./Subslide";
 const { width, height } = Dimensions.get("window");
 
@@ -54,58 +60,9 @@ interface Slide {
   };
 }
 
-export const slides: Slide[] = [
-  {
-    title: "Relaxed",
-    subtitle: "Find Your Outfits",
-    description:
-      "Confused about your outfit? Don’t worry! Find the best outfit here!",
-    color: "#BFEAF5",
-    picture: {
-      src: require("../../assets/img/1.png"),
-      width: 2513,
-      height: 3583,
-    },
-  },
-  {
-    title: "Playful",
-    subtitle: "Hear it First, Wear it First",
-    description:
-      "Hating the clothes in your wardrobe? Explore hundreds of outfit ideas",
-    color: "#BEECC4",
-    picture: {
-      src: require("../../assets/img/2.png"),
-      width: 2791,
-      height: 3744,
-    },
-  },
-  {
-    title: "Excentric",
-    subtitle: "Your Style, Your Way",
-    description:
-      " Create your individual & unique style and look amazing everyday",
-    color: "#FFE4D9",
-    picture: {
-      src: require("../../assets/img/3.png"),
-      width: 2738,
-      height: 3244,
-    },
-  },
-  {
-    title: "Funky",
-    subtitle: "Look Good, Feel Good",
-    description:
-      "Discover the latest trends in fashion and explore your personality",
-    color: "#FFDDDD",
-    picture: {
-      src: require("../../assets/img/4.png"),
-      width: 1757,
-      height: 2551,
-    },
-  },
-];
-
-export const Onboarding = () => {
+export const Onboarding = ({
+  navigation,
+}: AuthNavigationProps<"Onboarding">) => {
   const x = useSharedValue(0);
   const scroll = useRef<Animated.ScrollView>(null);
   const onScroll = useAnimatedScrollHandler({
@@ -129,6 +86,10 @@ export const Onboarding = () => {
   return (
     <View style={style.container}>
       <Animated.View style={[style.slider, background]}>
+        {slides.map(({ picture }, index) => {
+          return <SlideImage {...{ x, picture, width, index }} key={index} />;
+        })}
+
         <Animated.ScrollView
           ref={scroll}
           horizontal
@@ -166,21 +127,25 @@ export const Onboarding = () => {
               },
             ]}
           >
-            {slides.map(({ subtitle, description }, index) => (
-              <Subslide
-                onPress={() => {
-                  if (scroll.current?.scrollTo) {
-                    scroll.current.scrollTo({
-                      x: width * (index + 1),
-                      animated: true,
-                    });
-                  }
-                }}
-                last={index === slides.length - 1}
-                key={`subslide-${index}`}
-                {...{ subtitle, description }}
-              />
-            ))}
+            {slides.map(({ subtitle, description }, index) => {
+              const last = index === slides.length - 1;
+              return (
+                <Subslide
+                  onPress={() => {
+                    if (last) {
+                      navigation.navigate("Welcome");
+                    } else if (scroll.current?.scrollTo) {
+                      scroll.current.scrollTo({
+                        x: width * (index + 1),
+                        animated: true,
+                      });
+                    }
+                  }}
+                  key={`subslide-${index}`}
+                  {...{ subtitle, description, last }}
+                />
+              );
+            })}
           </Animated.View>
         </View>
       </View>

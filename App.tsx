@@ -4,8 +4,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Onboarding } from "./src/screens/Onboarding";
 import { LoadAssets } from "./src/components/LoadAssets";
 import { Welcome } from "./src/screens/Welcome";
+import type { Routes } from "./src/types";
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<Routes>();
 const AuthenticationNavigator = () => {
   return (
     <Stack.Navigator
@@ -18,6 +19,7 @@ const AuthenticationNavigator = () => {
     </Stack.Navigator>
   );
 };
+
 const App = () => {
   return (
     <LoadAssets>

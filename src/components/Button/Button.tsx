@@ -1,10 +1,17 @@
+import { useTheme } from "@shopify/restyle";
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
+import type { RectButtonProperties } from "react-native-gesture-handler";
 import { RectButton } from "react-native-gesture-handler";
+
+import { Box } from "..";
+import type { Theme } from "../../theme/theme";
+import { Text } from "../Text";
 interface IButton {
-  variant: "primary" | "default";
+  variant: "primary" | "default" | "transparent";
   label: string;
   onPress: () => void;
+  style?: RectButtonProperties["style"];
 }
 
 const styles = StyleSheet.create({
@@ -15,23 +22,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  label: {
-    fontSize: 15,
-    fontFamily: "SFProDisplay-Regular",
-  },
 });
 
-export const Button = ({ variant, label, onPress }: IButton) => {
-  const backgroundColor =
-    variant === "primary" ? "#2CB9B0" : "rgba(12,13,52,0.05)";
+export const Button = ({ variant, label, onPress, style }: IButton) => {
+  const theme = useTheme<Theme>();
+  let backgroundColor = theme.colors.button;
 
-  const color = variant === "primary" ? "white" : "#0C0D34";
+  if (variant === "primary") {
+    backgroundColor = theme.colors.primaryButton;
+  } else if (variant === "transparent") {
+    backgroundColor = "transparent";
+  }
   return (
     <RectButton
-      style={[styles.container, { backgroundColor }]}
+      style={[styles.container, style, { backgroundColor }]}
       {...{ onPress }}
     >
-      <Text style={[styles.label, { color }]}>{label}</Text>
+      <Text variant={variant === "primary" ? "buttonPrimary" : "button"}>
+        {label}
+      </Text>
     </RectButton>
   );
 };
